@@ -1,4 +1,10 @@
-import { FlatList, Image, Text, View } from "react-native";
+import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
+
+const NUM_COLUMNS = 3;
+const GAP = 2;
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const ITEM_SIZE = (SCREEN_WIDTH - GAP * (NUM_COLUMNS - 1)) / NUM_COLUMNS;
+
 const DATA = [
   {
     id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -15,18 +21,52 @@ const DATA = [
     title: "Third Item",
     image: require("@/assets/images/react-logo.png"),
   },
+  {
+    id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    title: "Fourth Item",
+    image: require("@/assets/images/react-logo.png"),
+  },
+  {
+    id: "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    title: "Fifth Item",
+    image: require("@/assets/images/react-logo.png"),
+  },
+  {
+    id: "c3d4e5f6-a7b8-9012-cdef-123456789012",
+    title: "Sixth Item",
+    image: require("@/assets/images/react-logo.png"),
+  },
 ];
 
 export default function TestScreen() {
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Test</Text>
-      <FlatList
-        data={DATA}
-        renderItem={({ item }) => (
-          <Image source={item.image} style={{ width: 100, height: 100 }} />
-        )}
-      />
-    </View>
+    <FlatList
+      data={DATA}
+      keyExtractor={(item) => item.id}
+      numColumns={NUM_COLUMNS}
+      columnWrapperStyle={styles.row}
+      renderItem={({ item }) => (
+        <View style={styles.cell}>
+          <Image source={item.image} style={styles.image} />
+        </View>
+      )}
+    />
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    gap: GAP,
+    marginBottom: GAP,
+  },
+  cell: {
+    width: ITEM_SIZE,
+    height: ITEM_SIZE,
+    backgroundColor: "#000",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+});
