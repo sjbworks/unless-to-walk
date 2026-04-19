@@ -1,4 +1,5 @@
 import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const NUM_COLUMNS = 3;
 const GAP = 2;
@@ -36,10 +37,26 @@ const DATA = [
     title: "Sixth Item",
     image: require("@/assets/images/react-logo.png"),
   },
+  {
+    id: "d4e5f6a7-b8c9-0123-defa-234567890123",
+    title: "Seventh Item",
+    image: require("@/assets/images/react-logo.png"),
+  },
+  {
+    id: "e5f6a7b8-c9d0-1234-efab-345678901234",
+    title: "Eighth Item",
+    image: require("@/assets/images/react-logo.png"),
+  },
+  {
+    id: "f6a7b8c9-d0e1-2345-fabc-456789012345",
+    title: "Ninth Item",
+    image: require("@/assets/images/react-logo.png"),
+  },
 ];
 
 export default function TestScreen() {
   return (
+    <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
     <FlatList
       data={DATA}
       keyExtractor={(item) => item.id}
@@ -51,6 +68,7 @@ export default function TestScreen() {
         </View>
       )}
     />
+    </SafeAreaView>
   );
 }
 
