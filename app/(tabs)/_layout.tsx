@@ -44,6 +44,19 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="gacha"
+        options={{
+          title: "Gacha",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="sparkles" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="gatcha-list"
+        options={{ href: null }}
+      />
     </Tabs>
   );
 }
