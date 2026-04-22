@@ -57,6 +57,10 @@ export default function TabLayout() {
         name="gatcha-list"
         options={{ href: null }}
       />
+      <Tabs.Screen
+        name="gacha-result"
+        options={{ href: null }}
+      />
     </Tabs>
   );
 }
