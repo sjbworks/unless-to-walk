@@ -57,17 +57,19 @@ const DATA = [
 export default function Gacha() {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["top"]}>
-      <FlatList
-        data={DATA}
-        keyExtractor={(item) => item.id}
-        numColumns={NUM_COLUMNS}
-        columnWrapperStyle={styles.row}
-        renderItem={({ item }) => (
-          <View style={styles.cell}>
-            <Image source={item.image} style={styles.image} />
-          </View>
-        )}
-      />
+      <View style={styles.content}>
+        <FlatList
+          data={DATA}
+          keyExtractor={(item) => item.id}
+          numColumns={NUM_COLUMNS}
+          columnWrapperStyle={styles.row}
+          renderItem={({ item }) => (
+            <View style={styles.cell}>
+              <Image source={item.image} style={styles.image} />
+            </View>
+          )}
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -86,5 +88,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     resizeMode: "cover",
+  },
+  content: {
+    padding: 16,
   },
 });
