@@ -1,6 +1,6 @@
+import { WalkCard } from "@/components/walk-card";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { WalkCard } from "@/components/walk-card";
 
 export default function TestScreen() {
   return (
@@ -9,7 +9,7 @@ export default function TestScreen() {
         <WalkCard
           steps={8432}
           comment="今日も気持ちよく歩けた！"
-          imageUri="https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=800"
+          image={require("@/assets/images/top/walking-nomal.png")}
           points={120}
         />
       </View>

@@ -120,7 +120,7 @@ export default function GachaResultScreen() {
           <WalkCard
             steps={item.steps}
             comment={item.comment}
-            imageUri={item.imageUri}
+            image={item.imageUri}
             points={item.points}
           />
         </Animated.View>
