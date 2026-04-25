@@ -1,17 +1,26 @@
 import { WalkCard } from "@/components/walk-card";
-import { StyleSheet, View } from "react-native";
+import { usePedometer } from "@/hooks/use-pedometer";
+import { useWalkImage } from "@/hooks/use-walk-image";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TestScreen() {
+  const { steps, isLoading } = usePedometer();
+  const image = useWalkImage(steps);
+
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={styles.content}>
-        <WalkCard
-          steps={8432}
-          comment="今日も気持ちよく歩けた！"
-          image={require("@/assets/images/top/walking-nomal.png")}
-          points={120}
-        />
+        {isLoading ? (
+          <ActivityIndicator style={styles.loader} />
+        ) : (
+          <WalkCard
+            steps={steps}
+            comment="今日も気持ちよく歩けた！"
+            image={image}
+            points={Math.floor(steps / 10)}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -23,5 +32,8 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 16,
+  },
+  loader: {
+    marginTop: 40,
   },
 });
