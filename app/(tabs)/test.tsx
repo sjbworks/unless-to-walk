@@ -1,12 +1,14 @@
 import { WalkCard } from "@/components/walk-card";
 import { getWalkTitle } from "@/constants/walk-titles";
 import { usePedometer } from "@/hooks/use-pedometer";
+import { useTotalSteps } from "@/hooks/use-total-steps";
 import { useWalkImage } from "@/hooks/use-walk-image";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function TestScreen() {
   const { steps, isLoading } = usePedometer();
+  const totalSteps = useTotalSteps(steps);
   const image = useWalkImage(steps);
 
   return (
@@ -17,7 +19,7 @@ export default function TestScreen() {
         ) : (
           <WalkCard
             steps={steps}
-            comment={getWalkTitle(steps)}
+            comment={getWalkTitle(totalSteps)}
             image={image}
             points={Math.floor(steps / 10)}
           />
