@@ -1,4 +1,5 @@
 import { WalkCard } from "@/components/walk-card";
+import { getWalkTitle } from "@/constants/walk-titles";
 import { usePedometer } from "@/hooks/use-pedometer";
 import { useWalkImage } from "@/hooks/use-walk-image";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -16,7 +17,7 @@ export default function TestScreen() {
         ) : (
           <WalkCard
             steps={steps}
-            comment="今日も気持ちよく歩けた！"
+            comment={getWalkTitle(steps)}
             image={image}
             points={Math.floor(steps / 10)}
           />
