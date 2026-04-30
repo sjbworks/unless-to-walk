@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { Dimensions, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLocalSearchParams, router } from "expo-router";
 import Animated, {
@@ -10,7 +10,6 @@ import Animated, {
   withSpring,
   Easing,
 } from "react-native-reanimated";
-import { WalkCard } from "@/components/walk-card";
 import { ThemedText } from "@/components/themed-text";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { GACHA_ITEMS } from "@/constants/gacha-items";
@@ -22,6 +21,18 @@ const COLORS = [
   "#96CEB4", "#FFEAA7", "#DDA0DD", "#98D8C8",
   "#F7DC6F", "#BB8FCE",
 ];
+
+const RARITY_COLOR: Record<string, string> = {
+  common: "#888888",
+  uncommon: "#4CAF50",
+  rare: "#FF9800",
+};
+
+const RARITY_LABEL: Record<string, string> = {
+  common: "コモン",
+  uncommon: "アンコモン",
+  rare: "レア",
+};
 
 type PieceConfig = {
   x: number;
@@ -78,6 +89,8 @@ export default function GachaResultScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const item = GACHA_ITEMS.find((i) => i.id === id) ?? GACHA_ITEMS[0];
   const tint = useThemeColor({}, "tint");
+  const background = useThemeColor({}, "background");
+  const icon = useThemeColor({}, "icon");
 
   const cardScale = useSharedValue(0.3);
   const cardOpacity = useSharedValue(0);
@@ -104,6 +117,9 @@ export default function GachaResultScreen() {
     transform: [{ scale: cardScale.value }],
   }));
 
+  const rarityColor = RARITY_COLOR[item.rarity] ?? "#888";
+  const rarityLabel = RARITY_LABEL[item.rarity] ?? item.rarity;
+
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
@@ -116,21 +132,31 @@ export default function GachaResultScreen() {
         <ThemedText type="title" style={styles.title}>
           おめでとう！
         </ThemedText>
-        <Animated.View style={cardStyle}>
-          <WalkCard
-            steps={item.steps}
-            comment={item.comment}
-            image={item.imageUri}
-            points={item.points}
-          />
+        <Animated.View style={[styles.card, { backgroundColor: background, borderColor: icon }, cardStyle]}>
+          <View style={styles.imageContainer}>
+            <Image source={item.image} style={styles.image} />
+          </View>
+          <View style={styles.body}>
+            <View style={styles.nameRow}>
+              <ThemedText type="defaultSemiBold" style={styles.itemName}>
+                {item.name}
+              </ThemedText>
+              <View style={[styles.rarityBadge, { backgroundColor: rarityColor }]}>
+                <ThemedText style={styles.rarityText} lightColor="#fff" darkColor="#fff">
+                  {rarityLabel}
+                </ThemedText>
+              </View>
+            </View>
+            <ThemedText style={styles.comment}>{item.comment}</ThemedText>
+          </View>
         </Animated.View>
         <TouchableOpacity
           style={[styles.button, { backgroundColor: tint }]}
-          onPress={() => router.push("/(tabs)/gatcha-list")}
+          onPress={() => router.push("/(tabs)/gacha")}
           activeOpacity={0.8}
         >
           <ThemedText style={styles.buttonText} lightColor="#fff" darkColor="#fff">
-            図鑑を見る
+            戻る
           </ThemedText>
         </TouchableOpacity>
       </ScrollView>
@@ -150,6 +176,46 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: "center",
+  },
+  card: {
+    borderRadius: 16,
+    borderWidth: 1,
+    overflow: "hidden",
+  },
+  imageContainer: {
+    width: "100%",
+    aspectRatio: 1,
+    backgroundColor: "#f5f5f5",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+  },
+  body: {
+    padding: 16,
+    gap: 8,
+  },
+  nameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  itemName: {
+    fontSize: 20,
+  },
+  rarityBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 12,
+  },
+  rarityText: {
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  comment: {
+    fontSize: 14,
+    lineHeight: 20,
   },
   button: {
     paddingVertical: 16,
