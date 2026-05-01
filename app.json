@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSMotionUsageDescription": "このアプリは歩数をカウントするためにモーションセンサーを使用します。"
+      }
     },
     "android": {
       "adaptiveIcon": {
