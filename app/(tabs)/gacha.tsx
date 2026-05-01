@@ -12,6 +12,9 @@ import Animated, {
 } from "react-native-reanimated";
 import { ThemedText } from "@/components/themed-text";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { usePedometer } from "@/hooks/use-pedometer";
+import { useTotalSteps } from "@/hooks/use-total-steps";
+import { useAruki } from "@/hooks/use-aruki";
 import { GACHA_ITEMS } from "@/constants/gacha-items";
 
 function Spinner() {
@@ -34,9 +37,20 @@ function Spinner() {
 export default function GachaScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const tint = useThemeColor({}, "tint");
+  const icon = useThemeColor({}, "icon");
 
-  const handleGacha = () => {
+  const { steps } = usePedometer();
+  const totalSteps = useTotalSteps(steps);
+  const { aruki, gachaTickets, spendArukiForGacha } = useAruki(totalSteps);
+
+  const stepsToNextAruki = 100 - (totalSteps % 100);
+  const arukiToNextTicket = 10 - (aruki % 10 === 0 && aruki > 0 ? 10 : aruki % 10);
+
+  const handleGacha = async () => {
+    if (gachaTickets <= 0) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    const spent = await spendArukiForGacha();
+    if (!spent) return;
     setIsLoading(true);
     const item = GACHA_ITEMS[Math.floor(Math.random() * GACHA_ITEMS.length)];
     setTimeout(() => {
@@ -56,15 +70,63 @@ export default function GachaScreen() {
         </View>
       </Modal>
 
-      <View style={styles.center}>
+      <View style={styles.inner}>
+        <View style={[styles.statsCard, { borderColor: icon }]}>
+          <View style={styles.statRow}>
+            <ThemedText style={styles.statLabel}>総歩数</ThemedText>
+            <ThemedText type="defaultSemiBold" style={styles.statValue}>
+              {totalSteps.toLocaleString()} 歩
+            </ThemedText>
+          </View>
+
+          <View style={[styles.divider, { backgroundColor: icon }]} />
+
+          <View style={styles.statRow}>
+            <View>
+              <ThemedText style={styles.statLabel}>あるきポイント</ThemedText>
+              <ThemedText style={[styles.statHint, { color: icon }]}>
+                あと {stepsToNextAruki} 歩で +1 あるき
+              </ThemedText>
+            </View>
+            <ThemedText type="defaultSemiBold" style={[styles.statValue, { color: tint }]}>
+              {aruki} あるき
+            </ThemedText>
+          </View>
+
+          <View style={[styles.divider, { backgroundColor: icon }]} />
+
+          <View style={styles.statRow}>
+            <View>
+              <ThemedText style={styles.statLabel}>ガチャチケット</ThemedText>
+              {gachaTickets === 0 && (
+                <ThemedText style={[styles.statHint, { color: icon }]}>
+                  あと {arukiToNextTicket} あるきで +1 枚
+                </ThemedText>
+              )}
+            </View>
+            <ThemedText type="defaultSemiBold" style={[styles.statValue, { color: tint }]}>
+              {gachaTickets} 枚
+            </ThemedText>
+          </View>
+        </View>
+
+        <View style={styles.legend}>
+          <ThemedText style={[styles.legendText, { color: icon }]}>
+            100歩 → 1あるき　／　10あるき → ガチャ1回
+          </ThemedText>
+        </View>
+
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: tint }]}
+          style={[
+            styles.button,
+            { backgroundColor: gachaTickets > 0 ? tint : icon },
+          ]}
           onPress={handleGacha}
           activeOpacity={0.8}
-          disabled={isLoading}
+          disabled={isLoading || gachaTickets <= 0}
         >
           <ThemedText style={styles.buttonText} lightColor="#fff" darkColor="#fff">
-            ガチャを引く
+            {gachaTickets > 0 ? "ガチャを引く（10あるき）" : "チケットが足りません"}
           </ThemedText>
         </TouchableOpacity>
       </View>
@@ -76,18 +138,51 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  center: {
+  inner: {
     flex: 1,
+    padding: 24,
     justifyContent: "center",
+    gap: 20,
+  },
+  statsCard: {
+    borderRadius: 16,
+    borderWidth: 1,
+    padding: 20,
+    gap: 16,
+  },
+  statRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
   },
+  statLabel: {
+    fontSize: 15,
+  },
+  statValue: {
+    fontSize: 20,
+  },
+  statHint: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  divider: {
+    height: 1,
+    opacity: 0.2,
+  },
+  legend: {
+    alignItems: "center",
+  },
+  legendText: {
+    fontSize: 12,
+  },
   button: {
-    paddingVertical: 16,
+    paddingVertical: 18,
     paddingHorizontal: 48,
     borderRadius: 32,
+    alignItems: "center",
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
   overlay: {
