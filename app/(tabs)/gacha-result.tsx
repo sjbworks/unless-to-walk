@@ -152,11 +152,20 @@ export default function GachaResultScreen() {
         </Animated.View>
         <TouchableOpacity
           style={[styles.button, { backgroundColor: tint }]}
-          onPress={() => router.push("/(tabs)/gacha")}
+          onPress={() => router.push("/(tabs)/gatcha-list")}
           activeOpacity={0.8}
         >
           <ThemedText style={styles.buttonText} lightColor="#fff" darkColor="#fff">
-            戻る
+            コレクションを見る
+          </ThemedText>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.button, { backgroundColor: "transparent", borderWidth: 1, borderColor: icon }]}
+          onPress={() => router.push("/(tabs)/gacha")}
+          activeOpacity={0.8}
+        >
+          <ThemedText style={styles.buttonText}>
+            ガチャに戻る
           </ThemedText>
         </TouchableOpacity>
       </ScrollView>

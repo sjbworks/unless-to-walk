@@ -15,6 +15,7 @@ import { useThemeColor } from "@/hooks/use-theme-color";
 import { usePedometer } from "@/hooks/use-pedometer";
 import { useTotalSteps } from "@/hooks/use-total-steps";
 import { useAruki } from "@/hooks/use-aruki";
+import { useGachaCollection } from "@/hooks/use-gacha-collection";
 import { GACHA_ITEMS } from "@/constants/gacha-items";
 
 function Spinner() {
@@ -42,6 +43,7 @@ export default function GachaScreen() {
   const { steps } = usePedometer();
   const totalSteps = useTotalSteps(steps);
   const { aruki, gachaTickets, spendArukiForGacha } = useAruki(totalSteps);
+  const { addItem } = useGachaCollection();
 
   const stepsToNextAruki = 100 - (totalSteps % 100);
   const arukiToNextTicket = 10 - (aruki % 10 === 0 && aruki > 0 ? 10 : aruki % 10);
@@ -53,6 +55,7 @@ export default function GachaScreen() {
     if (!spent) return;
     setIsLoading(true);
     const item = GACHA_ITEMS[Math.floor(Math.random() * GACHA_ITEMS.length)];
+    await addItem(item.id);
     setTimeout(() => {
       setIsLoading(false);
       router.push({ pathname: "/(tabs)/gacha-result", params: { id: item.id } });
@@ -129,6 +132,16 @@ export default function GachaScreen() {
             {gachaTickets > 0 ? "ガチャを引く（10あるき）" : "チケットが足りません"}
           </ThemedText>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.collectionButton, { borderColor: icon }]}
+          onPress={() => router.push("/(tabs)/gatcha-list")}
+          activeOpacity={0.8}
+        >
+          <ThemedText style={[styles.collectionButtonText, { color: icon }]}>
+            コレクションを見る
+          </ThemedText>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -203,5 +216,14 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
+  },
+  collectionButton: {
+    paddingVertical: 14,
+    borderRadius: 32,
+    alignItems: "center",
+    borderWidth: 1,
+  },
+  collectionButtonText: {
+    fontSize: 15,
   },
 });
