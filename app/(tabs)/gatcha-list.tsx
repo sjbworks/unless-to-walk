@@ -1,6 +1,7 @@
 import { Dimensions, FlatList, Image, StyleSheet, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
+import { useCallback } from "react";
 import { ThemedText } from "@/components/themed-text";
 import { useThemeColor } from "@/hooks/use-theme-color";
 import { useGachaCollection } from "@/hooks/use-gacha-collection";
@@ -13,20 +14,26 @@ const SCREEN_WIDTH = Dimensions.get("window").width;
 const ITEM_SIZE = (SCREEN_WIDTH - PADDING * 2 - GAP) / NUM_COLUMNS;
 
 const RARITY_COLOR: Record<string, string> = {
-  common: "#888888",
-  uncommon: "#4CAF50",
-  rare: "#FF9800",
+  star1: "#888888",
+  star2: "#4CAF50",
+  star3: "#FF9800",
 };
 
 const RARITY_LABEL: Record<string, string> = {
-  common: "コモン",
-  uncommon: "アンコモン",
-  rare: "レア",
+  star1: "★☆☆",
+  star2: "★★☆",
+  star3: "★★★",
 };
 
 export default function CollectionScreen() {
-  const { collection } = useGachaCollection();
+  const { collection, refresh } = useGachaCollection();
   const tint = useThemeColor({}, "tint");
+
+  useFocusEffect(
+    useCallback(() => {
+      refresh();
+    }, [refresh])
+  );
   const background = useThemeColor({}, "background");
   const icon = useThemeColor({}, "icon");
 

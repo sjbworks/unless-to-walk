@@ -26,6 +26,10 @@ export function useGachaCollection() {
     loadCollection().then(setCollection);
   }, []);
 
+  const refresh = useCallback(() => {
+    loadCollection().then(setCollection);
+  }, []);
+
   const addItem = useCallback(async (itemId: string) => {
     setCollection((prev) => {
       const next = { ...prev, [itemId]: (prev[itemId] ?? 0) + 1 };
@@ -34,5 +38,5 @@ export function useGachaCollection() {
     });
   }, []);
 
-  return { collection, addItem };
+  return { collection, addItem, refresh };
 }
