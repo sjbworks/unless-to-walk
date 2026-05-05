@@ -23,15 +23,15 @@ const COLORS = [
 ];
 
 const RARITY_COLOR: Record<string, string> = {
-  common: "#888888",
-  uncommon: "#4CAF50",
-  rare: "#FF9800",
+  star1: "#888888",
+  star2: "#4CAF50",
+  star3: "#FF9800",
 };
 
 const RARITY_LABEL: Record<string, string> = {
-  common: "コモン",
-  uncommon: "アンコモン",
-  rare: "レア",
+  star1: "★☆☆",
+  star2: "★★☆",
+  star3: "★★★",
 };
 
 type PieceConfig = {
