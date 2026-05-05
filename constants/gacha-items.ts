@@ -5,7 +5,7 @@ export type GachaItem = {
   name: string;
   comment: string;
   image: ImageSourcePropType;
-  rarity: "common" | "uncommon" | "rare";
+  rarity: "star1" | "star2" | "star3";
 };
 
 export const GACHA_ITEMS: GachaItem[] = [
@@ -14,34 +14,34 @@ export const GACHA_ITEMS: GachaItem[] = [
     name: "クーポン",
     comment: "歩いてゲットした特別クーポン！使えるかも？",
     image: require("@/assets/images/items/coupon.png"),
-    rarity: "common",
+    rarity: "star1",
   },
   {
     id: "2",
     name: "メモ",
     comment: "どこかで拾った大切そうなメモ。",
     image: require("@/assets/images/items/memo.png"),
-    rarity: "common",
+    rarity: "star1",
   },
   {
     id: "3",
     name: "ペッパーミル",
     comment: "こだわりのペッパーミル。料理が捗りそう！",
     image: require("@/assets/images/items/pepper-mill.png"),
-    rarity: "uncommon",
+    rarity: "star2",
   },
   {
     id: "4",
     name: "レシート",
     comment: "歩いた証のレシート。思い出の一枚。",
     image: require("@/assets/images/items/receipt.png"),
-    rarity: "common",
+    rarity: "star1",
   },
   {
     id: "5",
     name: "VIPカード",
     comment: "レア！VIPカードをゲット！どこで使えるんだろう？",
     image: require("@/assets/images/items/vipcard.png"),
-    rarity: "rare",
+    rarity: "star3",
   },
 ];
