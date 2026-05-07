@@ -3,6 +3,7 @@ import { getWalkTitle } from "@/constants/walk-titles";
 import { usePedometer } from "@/hooks/use-pedometer";
 import { useTotalSteps } from "@/hooks/use-total-steps";
 import { useWalkImage } from "@/hooks/use-walk-image";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -10,9 +11,10 @@ export default function TestScreen() {
   const { steps, isLoading } = usePedometer();
   const totalSteps = useTotalSteps(steps);
   const image = useWalkImage(steps);
+  const background = useThemeColor({}, "background");
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: background }]} edges={["top"]}>
       <View style={styles.content}>
         {isLoading ? (
           <ActivityIndicator style={styles.loader} />

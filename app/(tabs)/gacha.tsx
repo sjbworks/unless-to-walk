@@ -37,6 +37,7 @@ function Spinner() {
 
 export default function GachaScreen() {
   const [isLoading, setIsLoading] = useState(false);
+  const background = useThemeColor({}, "background");
   const tint = useThemeColor({}, "tint");
   const icon = useThemeColor({}, "icon");
 
@@ -63,7 +64,7 @@ export default function GachaScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={[styles.container, { backgroundColor: background }]} edges={["top"]}>
       <Modal visible={isLoading} transparent animationType="fade">
         <View style={styles.overlay}>
           <Spinner />
