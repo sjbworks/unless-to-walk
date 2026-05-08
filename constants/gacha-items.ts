@@ -44,4 +44,11 @@ export const GACHA_ITEMS: GachaItem[] = [
     image: require("@/assets/images/items/vipcard.png"),
     rarity: "star3",
   },
+  {
+    id: "6",
+    name: "試供品",
+    comment: "歩いていたら見つけた試供品。ちょっと得した気分！",
+    image: require("@/assets/images/items/shikyohin.png"),
+    rarity: "star2",
+  },
 ];
