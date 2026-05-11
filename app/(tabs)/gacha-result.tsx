@@ -1,25 +1,39 @@
-import { useEffect, useMemo } from "react";
-import { Dimensions, Image, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useLocalSearchParams, router } from "expo-router";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withDelay,
-  withTiming,
-  withSpring,
-  Easing,
-} from "react-native-reanimated";
 import { ThemedText } from "@/components/themed-text";
-import { useThemeColor } from "@/hooks/use-theme-color";
 import { GACHA_ITEMS } from "@/constants/gacha-items";
+import { useThemeColor } from "@/hooks/use-theme-color";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useMemo } from "react";
+import {
+  Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withDelay,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width: W, height: H } = Dimensions.get("window");
 
 const COLORS = [
-  "#FF6B6B", "#FFE66D", "#4ECDC4", "#45B7D1",
-  "#96CEB4", "#FFEAA7", "#DDA0DD", "#98D8C8",
-  "#F7DC6F", "#BB8FCE",
+  "#FF6B6B",
+  "#FFE66D",
+  "#4ECDC4",
+  "#45B7D1",
+  "#96CEB4",
+  "#FFEAA7",
+  "#DDA0DD",
+  "#98D8C8",
+  "#F7DC6F",
+  "#BB8FCE",
 ];
 
 const RARITY_COLOR: Record<string, string> = {
@@ -50,11 +64,11 @@ function ConfettiPiece({ x, delay, color, size, rotations }: PieceConfig) {
   useEffect(() => {
     translateY.value = withDelay(
       delay,
-      withTiming(H + 60, { duration: 2600, easing: Easing.in(Easing.quad) })
+      withTiming(H + 60, { duration: 2600, easing: Easing.in(Easing.quad) }),
     );
     rotate.value = withDelay(
       delay,
-      withTiming(rotations * 360, { duration: 2600, easing: Easing.linear })
+      withTiming(rotations * 360, { duration: 2600, easing: Easing.linear }),
     );
     opacity.value = withDelay(delay + 2000, withTiming(0, { duration: 300 }));
   }, []);
@@ -104,12 +118,15 @@ export default function GachaResultScreen() {
         size: 8 + Math.random() * 8,
         rotations: 1 + Math.random() * 4,
       })),
-    []
+    [],
   );
 
   useEffect(() => {
     cardOpacity.value = withDelay(200, withTiming(1, { duration: 300 }));
-    cardScale.value = withDelay(200, withSpring(1, { damping: 8, stiffness: 120 }));
+    cardScale.value = withDelay(
+      200,
+      withSpring(1, { damping: 8, stiffness: 120 }),
+    );
   }, []);
 
   const cardStyle = useAnimatedStyle(() => ({
@@ -132,7 +149,13 @@ export default function GachaResultScreen() {
         <ThemedText type="title" style={styles.title}>
           おめでとう！
         </ThemedText>
-        <Animated.View style={[styles.card, { backgroundColor: background, borderColor: icon }, cardStyle]}>
+        <Animated.View
+          style={[
+            styles.card,
+            { backgroundColor: background, borderColor: icon },
+            cardStyle,
+          ]}
+        >
           <View style={styles.imageContainer}>
             <Image source={item.image} style={styles.image} />
           </View>
@@ -141,8 +164,14 @@ export default function GachaResultScreen() {
               <ThemedText type="defaultSemiBold" style={styles.itemName}>
                 {item.name}
               </ThemedText>
-              <View style={[styles.rarityBadge, { backgroundColor: rarityColor }]}>
-                <ThemedText style={styles.rarityText} lightColor="#fff" darkColor="#fff">
+              <View
+                style={[styles.rarityBadge, { backgroundColor: rarityColor }]}
+              >
+                <ThemedText
+                  style={styles.rarityText}
+                  lightColor="#fff"
+                  darkColor="#353535"
+                >
                   {rarityLabel}
                 </ThemedText>
               </View>
@@ -155,18 +184,27 @@ export default function GachaResultScreen() {
           onPress={() => router.push("/(tabs)/gatcha-list")}
           activeOpacity={0.8}
         >
-          <ThemedText style={styles.buttonText} lightColor="#fff" darkColor="#fff">
+          <ThemedText
+            style={styles.buttonText}
+            lightColor="#fff"
+            darkColor="#353535"
+          >
             コレクションを見る
           </ThemedText>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, { backgroundColor: "transparent", borderWidth: 1, borderColor: icon }]}
+          style={[
+            styles.button,
+            {
+              backgroundColor: "transparent",
+              borderWidth: 1,
+              borderColor: icon,
+            },
+          ]}
           onPress={() => router.push("/(tabs)/gacha")}
           activeOpacity={0.8}
         >
-          <ThemedText style={styles.buttonText}>
-            ガチャに戻る
-          </ThemedText>
+          <ThemedText style={styles.buttonText}>ガチャに戻る</ThemedText>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
