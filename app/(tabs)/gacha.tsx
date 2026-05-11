@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
-import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
-import * as Haptics from "expo-haptics";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withRepeat,
-  withTiming,
-  Easing,
-} from "react-native-reanimated";
 import { ThemedText } from "@/components/themed-text";
-import { useThemeColor } from "@/hooks/use-theme-color";
-import { usePedometer } from "@/hooks/use-pedometer";
-import { useTotalSteps } from "@/hooks/use-total-steps";
+import { GACHA_ITEMS } from "@/constants/gacha-items";
 import { useAruki } from "@/hooks/use-aruki";
 import { useGachaCollection } from "@/hooks/use-gacha-collection";
-import { GACHA_ITEMS } from "@/constants/gacha-items";
+import { usePedometer } from "@/hooks/use-pedometer";
+import { useThemeColor } from "@/hooks/use-theme-color";
+import { useTotalSteps } from "@/hooks/use-total-steps";
+import * as Haptics from "expo-haptics";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function Spinner() {
   const rotation = useSharedValue(0);
@@ -24,7 +24,7 @@ function Spinner() {
   useEffect(() => {
     rotation.value = withRepeat(
       withTiming(360, { duration: 900, easing: Easing.linear }),
-      -1
+      -1,
     );
   }, []);
 
@@ -47,7 +47,8 @@ export default function GachaScreen() {
   const { addItem } = useGachaCollection();
 
   const stepsToNextAruki = 100 - (totalSteps % 100);
-  const arukiToNextTicket = 10 - (aruki % 10 === 0 && aruki > 0 ? 10 : aruki % 10);
+  const arukiToNextTicket =
+    10 - (aruki % 10 === 0 && aruki > 0 ? 10 : aruki % 10);
 
   const handleGacha = async () => {
     if (gachaTickets <= 0) return;
@@ -59,16 +60,26 @@ export default function GachaScreen() {
     await addItem(item.id);
     setTimeout(() => {
       setIsLoading(false);
-      router.push({ pathname: "/(tabs)/gacha-result", params: { id: item.id } });
+      router.push({
+        pathname: "/(tabs)/gacha-result",
+        params: { id: item.id },
+      });
     }, 2500);
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: background }]} edges={["top"]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: background }]}
+      edges={["top"]}
+    >
       <Modal visible={isLoading} transparent animationType="fade">
         <View style={styles.overlay}>
           <Spinner />
-          <ThemedText style={styles.loadingText} lightColor="#fff" darkColor="#fff">
+          <ThemedText
+            style={styles.loadingText}
+            lightColor="#fff"
+            darkColor="#fff"
+          >
             ガチャを引いています...
           </ThemedText>
         </View>
@@ -92,7 +103,10 @@ export default function GachaScreen() {
                 あと {stepsToNextAruki} 歩で +1 あるき
               </ThemedText>
             </View>
-            <ThemedText type="defaultSemiBold" style={[styles.statValue, { color: tint }]}>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.statValue, { color: tint }]}
+            >
               {aruki} あるき
             </ThemedText>
           </View>
@@ -108,7 +122,10 @@ export default function GachaScreen() {
                 </ThemedText>
               )}
             </View>
-            <ThemedText type="defaultSemiBold" style={[styles.statValue, { color: tint }]}>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.statValue, { color: tint }]}
+            >
               {gachaTickets} 枚
             </ThemedText>
           </View>
@@ -129,8 +146,14 @@ export default function GachaScreen() {
           activeOpacity={0.8}
           disabled={isLoading || gachaTickets <= 0}
         >
-          <ThemedText style={styles.buttonText} lightColor="#fff" darkColor="#fff">
-            {gachaTickets > 0 ? "ガチャを引く（10あるき）" : "チケットが足りません"}
+          <ThemedText
+            style={styles.buttonText}
+            lightColor="#fff"
+            darkColor="#353535"
+          >
+            {gachaTickets > 0
+              ? "ガチャを引く（10あるき）"
+              : "チケットが足りません"}
           </ThemedText>
         </TouchableOpacity>
 
